@@ -1,0 +1,29 @@
+{
+  "name": "ui5-middleware-xsuaa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/xsuaa.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jotasom/ui5-middleware-xsuaa.git"
+  },
+  "author": "jotasom",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jotasom/ui5-middleware-xsuaa/issues"
+  },
+  "homepage": "https://github.com/jotasom/ui5-middleware-xsuaa#readme",
+  "devDependencies": {
+    "@ui5/cli": "^2.14.11"
+  },
+  "ui5": {
+    "dependencies": []
+  },
+  "dependencies": {
+    "@ui5/logger": "^2.0.1",
+    "dotenv": "^16.0.2"
+  }
+}

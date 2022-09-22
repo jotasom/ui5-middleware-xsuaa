@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link
+            rel="stylesheet"
+            href="https://unpkg.com/fiori-fundamentals@latest/dist/fiori-fundamentals.min.css" />
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <!--<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>-->
+        <script src="https://unpkg.com/fundamental-vue@latest/dist/FundamentalVue.umd.js"></script>
+    </head>
+    <body>
+        <div id="app">
+            <div v-for="backend in backends">
+                <template>
+                    <fd-action-bar v-fd-margin:small.right>
+                        <template #header>
+                            <fd-action-bar-header>
+                                <template #title>
+                                    <fd-action-bar-title>
+                                        {{ backend.id + 1 }}. {{ backend.name }}
+                                        <fd-badge v-bind:type="backend.status">{{ statusText(backend.status) }}</fd-badge>
+                                    </fd-action-bar-title>
+                                </template>
+                                <template #description>
+                                    <fd-action-bar-description>
+                                        <fd-input-group v-if="backend.manual" compact>
+                                            <template #input>
+                                                <fd-input v-model="backend.code" style="width: 300px;" placeholder="Paste or type the code here" />
+                                            </template>
+                                            <template #after>
+                                                <fd-input-group-addon>
+                                                    <fd-input-group-button @click="onSubmit(backend)" compact>Submit Code</fd-input-group-button>
+                                                </fd-input-group-addon>
+                                            </template>
+                                        </fd-input-group>
+                                        <span v-else>No manual authentication required for this backend.</span>
+                                    </fd-action-bar-description>
+                                </template>
+                            </fd-action-bar-header>
+                        </template>
+                        <template #actions>
+                            <fd-action-bar-actions>
+                                <fd-button v-if="backend.manual" @click="onOpenUrl(backend.url)" icon="inspect" compact>Get Code</fd-button>
+                            </fd-action-bar-actions>
+                        </template>
+                    </fd-action-bar>
+                </template>
+            </div>
+            <fd-alert v-fd-margin:small type="information" v-bind:dismissible="dismissible">
+                Any backend available through the OAuth2 Authorization Code flow must be manually authenticated.
+                <br>
+                First, click on "Get Code" and authenticate normally. You'll be redirected to a non-working localhost page. 
+                Copy ONLY its code into the field and click Submit Code.
+            </fd-alert>
+        </div>
+
+        <script type="module">
+            const app = new Vue({
+                el: "#app",
+                data: () => ({
+                    url: "",
+                    dismissible: false,
+                    backends: []
+                }),
+                methods: {
+                    statusText(status) {
+                        switch (status) {
+                            case "success":
+                                return "Authenticated";
+                            case "warning":
+                                return "Not Authenticated";
+                            case "error":
+                                return "Authentication Failed";
+                            default:
+                                return "Unknown / Other";
+                        }
+                    },
+                    onOpenUrl(url) {
+                        window.open(url, "_blank").focus();
+                    },
+                    onSubmit(backend) {
+                        fetch(`/xsuaa?id=${ backend.id }&code=${ backend.code }`).then(response => {
+                            if (response.ok) {
+                                backend.code = null;
+                                backend.status = "success";
+                            } else {
+                                backend.status = "error";
+                            }
+                        });
+                    }
+                },
+                mounted() {
+                    const url = new URL(window.location.href);
+
+                    this.url = url.pathname;
+                    fetch(url.pathname + "?fetch=true").then(response => {
+                        if (response.ok) {
+                            response.json().then(json => {
+                                this.backends = json;
+                            });
+                        }
+                    });
+                }
+            });
+        </script>
+    </body>
+</html>
