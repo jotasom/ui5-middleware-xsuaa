@@ -6,6 +6,8 @@ This is a middleware that supports XSUAA authentication to SAP BTP - Cloud Found
 
 ## Sample Configuration
 
+First, install this library using npm. Also, add `ui5-middleware-xsuaa` to `ui5.dependencies` on the `package.json` file.
+
 Put the following under `customMiddleware` in `ui5.yaml`:
 
 ```yaml
@@ -31,5 +33,6 @@ Make sure all needed services are properly bound on a `.env` file located in the
 
 ## TODO
 
+- Once an authorization has expired, set each backend to "not authorized" and re-authenticate them (if possible)
 - Add optional backend.redirectUri, so that the middleware can set up an endpoint for the XSUAA service to redirect to
 - Add support for destination service
