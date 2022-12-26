@@ -1,3 +1,7 @@
+[![NPM Version](http://img.shields.io/npm/v/ui5-middleware-xsuaa.svg?style=flat-square)](https://npmjs.com/package/ui5-middleware-xsuaa)
+[![License](http://img.shields.io/npm/l/ui5-middleware-xsuaa.svg?style=flat-square)](http://opensource.org/licenses/MIT)
+![Build](https://github.com/jotasom/ui5-middleware-xsuaa/actions/workflows/npm-publish.yml/badge.svg)
+
 # ui5-middleware-xsuaa
 
 This is a middleware that supports XSUAA authentication to SAP BTP - Cloud Foundry services using either of the following grant types:
