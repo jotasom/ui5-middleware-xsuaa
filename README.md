@@ -20,6 +20,9 @@ Put the following under `customMiddleware` in `ui5.yaml`:
       configuration:
         authorizationCodePath: /xsuaa
         backend:
+          - path: /api
+            pathPrefix: /
+            destination: API_Portal_NonProd
           - path: /bpmworkflowruntime
             pathPrefix: /
             service: com.sap.bpm.workflow
@@ -31,7 +34,7 @@ Put the following under `customMiddleware` in `ui5.yaml`:
             grantType: authorizationCode
 ```
 
-Make sure all needed services are properly bound on a `.env` file located in the same folder as the `ui5.yaml` file¹.
+Make sure all needed services (including a destination service, if destinations are being used) are properly bound on a `.env` file located in the same folder as the `ui5.yaml` file¹.
 
 ¹ On SAP Business Application Studio, go to `View` > `Find Command...` > `CF: Bind a service to a locally run application`.
 
@@ -39,4 +42,3 @@ Make sure all needed services are properly bound on a `.env` file located in the
 
 - Once an authorization has expired, set each backend to "not authorized" and re-authenticate them (if possible)
 - Add optional backend.redirectUri, so that the middleware can set up an endpoint for the XSUAA service to redirect to
-- Add support for destination service

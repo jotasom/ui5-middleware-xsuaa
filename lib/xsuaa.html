@@ -23,6 +23,9 @@
                                 </template>
                                 <template #description>
                                     <fd-action-bar-description>
+                                        <span><strong>Endpoint:</strong> {{ backend.endpoint }}<br></span>
+                                        <span v-if="backend.service"><strong>Service:</strong> {{ backend.service }}<br></span>
+                                        <span v-else-if="backend.destination"><strong>Destination:</strong> {{ backend.destination }}<br></span>
                                         <fd-input-group v-if="backend.manual" compact>
                                             <template #input>
                                                 <fd-input v-model="backend.code" style="width: 300px;" placeholder="Paste or type the code here" />
@@ -46,11 +49,14 @@
                     </fd-action-bar>
                 </template>
             </div>
-            <fd-alert v-fd-margin:small type="information" v-bind:dismissible="dismissible">
+            <fd-alert v-fd-margin:small type="information" v-bind:dismissible="dismissible" v-if="hasManual">
                 Any backend available through the OAuth2 Authorization Code flow must be manually authenticated.
                 <br>
                 First, click on "Get Code" and authenticate normally. You'll be redirected to a non-working localhost page. 
                 Copy ONLY its code into the field and click Submit Code.
+            </fd-alert>
+            <fd-alert v-fd-margin:small type="information" v-bind:dismissible="dismissible" v-else>
+                All backends are configured to use the OAuth2 Client Credentials grant and will be automatically authenticated.
             </fd-alert>
         </div>
 
@@ -59,6 +65,7 @@
                 el: "#app",
                 data: () => ({
                     url: "",
+                    hasManual: false,
                     dismissible: false,
                     backends: []
                 }),
@@ -70,15 +77,19 @@
                             case "warning":
                                 return "Not Authenticated";
                             case "error":
-                                return "Authentication Failed";
+                                return "Authentication Error";
+                            case "info":
+                                return "Pending";
                             default:
-                                return "Unknown / Other";
+                                return "Unknown Status";
                         }
                     },
                     onOpenUrl(url) {
                         window.open(url, "_blank").focus();
                     },
                     onSubmit(backend) {
+                        backend.status = "info";
+
                         fetch(`/xsuaa?id=${ backend.id }&code=${ backend.code }`).then(response => {
                             if (response.ok) {
                                 backend.code = null;
@@ -97,6 +108,7 @@
                         if (response.ok) {
                             response.json().then(json => {
                                 this.backends = json;
+                                this.hasManual = json.some(backend => backend.manual);
                             });
                         }
                     });
