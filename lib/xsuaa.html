@@ -26,7 +26,8 @@
                                         <span><strong>Endpoint:</strong> {{ backend.endpoint }}<br></span>
                                         <span v-if="backend.service"><strong>Service:</strong> {{ backend.service }}<br></span>
                                         <span v-else-if="backend.destination"><strong>Destination:</strong> {{ backend.destination }}<br></span>
-                                        <fd-input-group v-if="backend.manual" compact>
+                                        <fd-button v-if="backend.redirectUri" @click="onAuthroize(backend.url)" compact>Authorize</fd-button>
+                                        <fd-input-group v-else-if="backend.manual" compact>
                                             <template #input>
                                                 <fd-input v-model="backend.code" style="width: 300px;" placeholder="Paste or type the code here" />
                                             </template>
@@ -43,7 +44,8 @@
                         </template>
                         <template #actions>
                             <fd-action-bar-actions>
-                                <fd-button v-if="backend.manual" @click="onOpenUrl(backend.url)" icon="inspect" compact>Get Code</fd-button>
+                                <fd-button v-if="backend.redirectUri" @click="onOpenUrl(backend.url)" icon="inspect" compact>Authorize</fd-button>
+                                <fd-button v-else-if="backend.manual" @click="onOpenUrl(backend.url)" icon="inspect" compact>Get Code</fd-button>
                             </fd-action-bar-actions>
                         </template>
                     </fd-action-bar>
@@ -83,6 +85,9 @@
                             default:
                                 return "Unknown Status";
                         }
+                    },
+                    onAuthroize(url) {
+                        document.location.href = url;
                     },
                     onOpenUrl(url) {
                         window.open(url, "_blank").focus();

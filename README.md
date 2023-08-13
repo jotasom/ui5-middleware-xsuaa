@@ -32,6 +32,10 @@ Put the following under `customMiddleware` in `ui5.yaml`:
             service: com.sap.bpm.workflow
             endpoint: workflow_odata_url
             grantType: authorizationCode
+          - path: /sap
+            pathPrefix: /sap
+            destination: abap-cloud-default_abap-trial
+            grantType: authorizationCode            
 ```
 
 Make sure all needed services (including a destination service, if destinations are being used) are properly bound on a `.env` file located in the same folder as the `ui5.yaml` file¹.
