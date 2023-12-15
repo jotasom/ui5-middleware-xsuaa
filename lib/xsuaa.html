@@ -5,7 +5,6 @@
             rel="stylesheet"
             href="https://unpkg.com/fiori-fundamentals@latest/dist/fiori-fundamentals.min.css" />
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-        <!--<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>-->
         <script src="https://unpkg.com/fundamental-vue@latest/dist/FundamentalVue.umd.js"></script>
     </head>
     <body>
@@ -26,7 +25,6 @@
                                         <span><strong>Endpoint:</strong> {{ backend.endpoint }}<br></span>
                                         <span v-if="backend.service"><strong>Service:</strong> {{ backend.service }}<br></span>
                                         <span v-else-if="backend.destination"><strong>Destination:</strong> {{ backend.destination }}<br></span>
-                                        <fd-button v-if="backend.redirectUri" @click="onAuthroize(backend.url)" compact>Authorize</fd-button>
                                         <fd-input-group v-else-if="backend.manual" compact>
                                             <template #input>
                                                 <fd-input v-model="backend.code" style="width: 300px;" placeholder="Paste or type the code here" />
@@ -85,9 +83,6 @@
                             default:
                                 return "Unknown Status";
                         }
-                    },
-                    onAuthroize(url) {
-                        document.location.href = url;
                     },
                     onOpenUrl(url) {
                         window.open(url, "_blank").focus();
